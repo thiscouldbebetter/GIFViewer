@@ -1,0 +1,86 @@
+<html>
+<body>
+
+<div id="divUI">
+
+	<label>GIF File to Load:</label>
+	<input type="file" onchange="inputFileToLoad_Changed(event);"></input>
+	<div id="divImage"></div>
+	<button onclick="buttonSave_Clicked();">Save</button>
+
+</div>
+
+<script type="text/javascript">
+
+// ui events
+
+function buttonSave_Clicked()
+{
+	var imageFileGIF = Session.Instance.imageFileGIF;
+	if (imageFileGIF == null)
+	{
+		alert("No file specified!");
+	}
+	else
+	{
+		var bytesToSave = imageFileGIF.toBytes();
+
+		var numberOfBytes = bytesToSave.length;
+		var bytesAsArrayBuffer = new ArrayBuffer(numberOfBytes);
+		var bytesAsUIntArray = new Uint8Array(bytesAsArrayBuffer);
+		for (var i = 0; i < numberOfBytes; i++)
+		{
+			bytesAsUIntArray[i] = bytesToSave[i];
+		}
+
+		var bytesAsBlob = new Blob
+		(
+			[ bytesAsArrayBuffer ],
+			{type:"application/type"}
+		);
+
+		var downloadLink = document.createElement("a");
+		downloadLink.href = URL.createObjectURL(bytesAsBlob);
+		downloadLink.download = "Image.gif";
+		downloadLink.click();
+	}
+}
+
+function inputFileToLoad_Changed(event)
+{
+	var fileToLoad = event.target.files[0];
+	if (fileToLoad != null)
+	{
+		var fileReader = new FileReader();
+		fileReader.onload = function(event2)
+		{
+			var fileAsBinaryString = event2.target.result;
+			var fileAsBytes = [];
+			for (var i = 0; i < fileAsBinaryString.length; i++)
+			{
+				fileAsBytes.push(fileAsBinaryString.charCodeAt(i));
+			}
+			var imageFileGIF = ImageFileGIF.fromBytes(fileAsBytes);
+			Session.Instance.imageFileGIF(imageFileGIF);
+		}
+		fileReader.readAsBinaryString(fileToLoad);
+	}
+}
+
+</script>
+
+<script type="text/javascript" src="BitStream.js"></script>
+<script type="text/javascript" src="ByteStream.js"></script>
+<script type="text/javascript" src="Color.js"></script>
+<script type="text/javascript" src="CompressorLZW.js"></script>
+<script type="text/javascript" src="Coords.js"></script>
+<script type="text/javascript" src="ImageFileGIF.js"></script>
+<script type="text/javascript" src="ImageFileGIF_Block_End.js"></script>
+<script type="text/javascript" src="ImageFileGIF_Block_Extension.js"></script>
+<script type="text/javascript" src="ImageFileGIF_Block_Image.js"></script>
+<script type="text/javascript" src="ImageFileGIF_ColorTable.js"></script>
+<script type="text/javascript" src="Session.js"></script>
+<script type="text/javascript" src="TestFixture.js"></script>
+
+</body>
+</html>
