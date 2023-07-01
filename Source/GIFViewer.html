@@ -3,6 +3,15 @@
 
 <div id="divUI">
 
+	<h3>GIF Viewer</h3>
+
+	<p>
+		Upload a .gif file to see its contents parsed and displayed as an image.
+		Note that this program re-implements the GIF decoding algorithm,
+		rather than simply using the built-in browser functionality 
+		to display a GIF.
+	</p>
+
 	<label>GIF File to Load:</label>
 	<input type="file" onchange="inputFileToLoad_Changed(event);"></input>
 	<div id="divImage"></div>
